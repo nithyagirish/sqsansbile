@@ -1,0 +1,30 @@
+---
+- name: Create SQS queue Using Ansible
+  hots: localhost
+  gather_facts: False
+
+  tasks:
+     -name: task #1 Create Queue
+     SQS_queue:
+         name: "SQSQueue"
+         region: region1
+         default_visibility_timeout: dvt
+         message_retention_period: mtp
+         maximum_message_size: mms
+         delivery_delay: dd
+         receive_message_wait_time: rmwt
+         policy:
+           Version: 2012-10-17
+           Id: sqs-queue-policy
+           Statement: 
+             - Sid: allownotifications
+               Effect: Allow
+               Principal:
+                 Service: sqs.amazonaws.com
+               Action:
+                 - SQS:SendMessage
+              Resource: arn:aws:sqs:*123456789012:Mysnsqueue
+         redrive_policy:
+         maxReceiveCount: mrc
+         deadLetterTargetArn: arn:aws:iam::aws:policy/AmazonSQSFullAccess
+     register: SQS 
